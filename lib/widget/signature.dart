@@ -21,15 +21,27 @@ class SignaturePainter extends CustomPainter {
 
 class Signature extends StatefulWidget {
 
+  Signature({Key key,this.controller});
+
+  final SignatureController controller;
+
   SignatureState createState() => new SignatureState();
+}
 
-  Signature({Key key,this.onChanged});
+class SignatureController{
+  List<Offset> points = <Offset>[];
+  SignatureState _state;
+  void clear(){
+    points.clear();
+  }
 
-  final ValueChanged<List<Offset>> onChanged;
+  void _setState(SignatureState state){
+    this._state = state;
+  }
 }
 
 class SignatureState extends State<Signature> {
-  List<Offset> _points = <Offset>[];
+
 
   Widget build(BuildContext context) {
     return new Stack(
@@ -40,13 +52,12 @@ class SignatureState extends State<Signature> {
             Offset localPosition =
             referenceBox.globalToLocal(details.globalPosition);
             setState(() {
-              _points = new List.from(_points)..add(localPosition);
-              widget.onChanged(_points);
+              widget.controller.points = new List.from(widget.controller.points)..add(localPosition);
             });
           },
-          onPanEnd: (DragEndDetails details) => _points.add(null),
+          onPanEnd: (DragEndDetails details) => widget.controller.points.add(null),
         ),
-        CustomPaint(painter: new SignaturePainter(_points))
+        CustomPaint(painter: new SignaturePainter(widget.controller.points))
       ],
     );
   }

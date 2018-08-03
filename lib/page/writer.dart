@@ -5,35 +5,35 @@ import 'dart:io';
 import 'package:handwriting_borad/widget/signature.dart';
 
 class WriterPage extends StatefulWidget {
-  WriterPage({Key key, this.ip}) : super(key: key);
+  WriterPage({Key key, this.socket}) : super(key: key);
 
   final String title = "Handwriting";
-  final String ip;
+  final RawSocket socket;
 
   @override
   _WriterPagePageState createState() => new _WriterPagePageState();
-
 }
 
 class _WriterPagePageState extends State<WriterPage> {
-  List<Offset> _points = <Offset>[];
-  RawSocket socket;
+  SignatureController _controller = new SignatureController();
+
+  List<Offset> get _points => _controller.points;
 
   void send(List<int> bytes) {
-    socket.write(bytes);
+    widget.socket.write(bytes);
   }
-  void sendInt(int num){
+
+  void sendInt(int num) {
     send(convertIntToByte(num));
   }
 
-  void _sendPoints() async{
-    // ignore: close_sinks
+  void _sendPoints() {
     for (int i = 0; i < _points.length - 1; i++) {
       if (_points[i] != null && _points[i + 1] != null) {
         var sx = _points[i].dx.round();
         var sy = _points[i].dy.round();
-        var ex = _points[i+1].dx.round();
-        var ey = _points[i+1].dy.round();
+        var ex = _points[i + 1].dx.round();
+        var ey = _points[i + 1].dy.round();
         print("($sx,$sy,$ex,$ey)");
         sendInt(sx);
         sendInt(sy);
@@ -41,38 +41,20 @@ class _WriterPagePageState extends State<WriterPage> {
         sendInt(ey);
       }
     }
-    for(int i = 0; i < 4;i++){
+    for (int i = 0; i < 4; i++) {
       sendInt(0);
-    }
-  }
-
-  void _connect(BuildContext context) async {
-    if(socket == null){
-      try{
-        print("Try to connect ${widget.ip}:8288");
-        socket = await RawSocket.connect(widget.ip, 8288,timeout: Duration(seconds: 2));
-        print("Connect success");
-      }catch(e){
-        Navigator.pop(context);
-      }
-
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    _connect(context);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
       body: new Center(
         child: new Container(
-          child: new Signature(
-            onChanged: (List<Offset> offsets) {
-              _points = offsets;
-            },
-          ),
+          child: new Signature(controller: _controller),
           width: 250.0,
           height: 250.0,
           decoration: new BoxDecoration(
@@ -81,14 +63,17 @@ class _WriterPagePageState extends State<WriterPage> {
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-          child: new Icon(Icons.send), onPressed: _sendPoints),
+          child: new Icon(Icons.send),
+          onPressed: () {
+            this._sendPoints();
+            _controller.clear();
+          }),
     );
   }
 
   @override
   void dispose() {
-    socket.close();
+    widget.socket.close();
     super.dispose();
   }
-
 }
