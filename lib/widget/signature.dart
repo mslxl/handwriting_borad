@@ -30,13 +30,8 @@ class Signature extends StatefulWidget {
 
 class SignatureController{
   List<Offset> points = <Offset>[];
-  SignatureState _state;
   void clear(){
     points.clear();
-  }
-
-  void _setState(SignatureState state){
-    this._state = state;
   }
 }
 
