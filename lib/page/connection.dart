@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:handwriting_borad/page/writer.dart';
-import 'package:handwriting_borad/util.dart';
 import 'dart:io';
 
 class ConnectionPage extends StatefulWidget {

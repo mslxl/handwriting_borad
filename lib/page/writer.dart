@@ -19,6 +19,7 @@ class _WriterPagePageState extends State<WriterPage> {
 
   List<Offset> get _points => _controller.points;
 
+  bool _sending = false;
   String _background = '';
 
   void send(List<int> bytes) {
@@ -31,6 +32,7 @@ class _WriterPagePageState extends State<WriterPage> {
 
 
   void _sendPoints() {
+    _sending = true;
     for (int i = 0; i < _points.length - 1; i++) {
       if (_points[i] != null && _points[i + 1] != null) {
         var sx = _points[i].dx.round();
@@ -47,6 +49,7 @@ class _WriterPagePageState extends State<WriterPage> {
     for (int i = 0; i < 4; i++) {
       sendInt(0);
     }
+    _sending = false;
   }
 
   @override
@@ -55,132 +58,164 @@ class _WriterPagePageState extends State<WriterPage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: new Center(
-        child: new Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            new Text(
-              '$_background',
-              style: TextStyle(fontSize: 150.0),
-            ),
-            // 田字格|三线格
-            new Opacity(
-                opacity: 0.5,
-                child: new Container(
-                  child: new Stack(
-                    children: <Widget>[
-                      new Row(
-                        children: <Widget>[
-                          new Expanded(
-                              child: new Column(
+      body: new Column(
+        children: <Widget>[
+          new Expanded(
+              child: new Center(
+                child: new Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    new Text(
+                      '$_background',
+                      style: TextStyle(fontSize: 150.0),
+                    ),
+                    // 田字格|三线格
+                    new Opacity(
+                        opacity: 0.5,
+                        child: new Container(
+                          child: new Stack(
+                            children: <Widget>[
+                              new Row(
                                 children: <Widget>[
                                   new Expanded(
-                                    child: new Container(
-                                      decoration: new BoxDecoration(
-                                          borderRadius:
-                                          BorderRadius.circular(2.5),
-                                          border: Border.all(
-                                              color: Colors.amber, width: 2.5)),
-                                    ),
-                                    flex: 1,
-                                  ),
+                                      child: new Column(
+                                        children: <Widget>[
+                                          new Expanded(
+                                            child: new Container(
+                                              decoration: new BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(2.5),
+                                                  border: Border.all(
+                                                      color: Colors.amber, width: 2.5)),
+                                            ),
+                                            flex: 1,
+                                          ),
+                                          new Expanded(
+                                            child: new Container(
+                                              decoration: new BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(2.5),
+                                                  border: Border.all(
+                                                      color: Colors.amber, width: 2.5)),
+                                            ),
+                                            flex: 1,
+                                          )
+                                        ],
+                                      ),
+                                      flex: 1),
                                   new Expanded(
-                                    child: new Container(
-                                      decoration: new BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(2.5),
-                                          border: Border.all(
-                                              color: Colors.amber, width: 2.5)),
-                                    ),
-                                    flex: 1,
-                                  )
+                                      child: new Column(
+                                        children: <Widget>[
+                                          new Expanded(
+                                            child: new Container(
+                                              decoration: new BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(2.5),
+                                                  border: Border.all(
+                                                      color: Colors.amber, width: 2.5)),
+                                            ),
+                                            flex: 1,
+                                          ),
+                                          new Expanded(
+                                            child: new Container(
+                                              decoration: new BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(2.5),
+                                                  border: Border.all(
+                                                      color: Colors.amber, width: 2.5)),
+                                            ),
+                                            flex: 1,
+                                          )
+                                        ],
+                                      ),
+                                      flex: 1)
                                 ],
                               ),
-                              flex: 1),
-                          new Expanded(
-                              child: new Column(
+                              new Column(
                                 children: <Widget>[
                                   new Expanded(
-                                    child: new Container(
-                                      decoration: new BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(2.5),
-                                          border: Border.all(
-                                              color: Colors.amber, width: 2.5)),
-                                    ),
-                                    flex: 1,
-                                  ),
+                                      child: new Container(
+                                        decoration: new BoxDecoration(
+                                            borderRadius: BorderRadius.circular(2.5),
+                                            border: Border.all(
+                                                color: Colors.amber, width: 2.5)),
+                                      ),
+                                      flex: 1),
                                   new Expanded(
-                                    child: new Container(
-                                      decoration: new BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(2.5),
-                                          border: Border.all(
-                                              color: Colors.amber, width: 2.5)),
-                                    ),
-                                    flex: 1,
-                                  )
+                                      child: new Container(
+                                        decoration: new BoxDecoration(
+                                            borderRadius: BorderRadius.circular(2.5),
+                                            border: Border.all(
+                                                color: Colors.amber, width: 2.5)),
+                                      ),
+                                      flex: 1),
+                                  new Expanded(
+                                      child: new Container(
+                                        decoration: new BoxDecoration(
+                                            borderRadius: BorderRadius.circular(2.5),
+                                            border: Border.all(
+                                                color: Colors.amber, width: 2.5)),
+                                      ),
+                                      flex: 1),
+
+
                                 ],
-                              ),
-                              flex: 1)
-                        ],
-                      ),
-                      new Column(
-                        children: <Widget>[
-                          new Expanded(
-                              child: new Container(
-                                decoration: new BoxDecoration(
-                                    borderRadius: BorderRadius.circular(2.5),
-                                    border: Border.all(
-                                        color: Colors.amber, width: 2.5)),
-                              ),
-                              flex: 1),
-                          new Expanded(
-                              child: new Container(
-                                decoration: new BoxDecoration(
-                                    borderRadius: BorderRadius.circular(2.5),
-                                    border: Border.all(
-                                        color: Colors.amber, width: 2.5)),
-                              ),
-                              flex: 1),
-                          new Expanded(
-                              child: new Container(
-                                decoration: new BoxDecoration(
-                                    borderRadius: BorderRadius.circular(2.5),
-                                    border: Border.all(
-                                        color: Colors.amber, width: 2.5)),
-                              ),
-                              flex: 1),
-
-
-                        ],
-                      )
-                    ],
-                  ),
-                  color: Colors.amberAccent,
-                  width: 200.0,
-                  height: 200.0,
-                )),
-            new Container(
-              child: new Signature(controller: _controller),
-              width: 200.0,
-              height: 200.0
-            )
-          ],
-        ),
+                              )
+                            ],
+                          ),
+                          color: Colors.amberAccent,
+                          width: 200.0,
+                          height: 200.0,
+                        )),
+                    new Container(
+                        child: new Signature(controller: _controller),
+                        width: 200.0,
+                        height: 200.0
+                    )
+                  ],
+                ),
+              ),
+          ),
+          new OutlineButton(
+              child: Icon(Icons.clear),
+              onPressed: () {
+                _controller.clear();
+              })
+        ],
       ),
-      floatingActionButton: new FloatingActionButton(
-          child: new Icon(Icons.send),
-          onPressed: () {
-            this._sendPoints();
-            _controller.clear();
-          }),
+
+      floatingActionButton: new Builder(builder: (context){
+        return new FloatingActionButton(
+            child: new Icon(Icons.send),
+            onPressed: () {
+              if(!_sending){
+                if(_controller.points.isEmpty){
+
+                  final snackBar = new SnackBar(
+                    content: new Text('Are you sure to send empty route to your server?'),
+                    action: new SnackBarAction(
+                        label: 'Yes',
+                        onPressed: () {
+                          this._sendPoints();
+                          _controller.clear();
+                        }
+                    ),
+                  );
+                  Scaffold.of(context).showSnackBar(snackBar);
+                }else{
+                  this._sendPoints();
+                  _controller.clear();
+                }
+              }
+            });
+      }),
     );
   }
 
 
   @override
   void initState() {
+    super.initState();
     widget.socket.listen((event){
       setState(() {
         var b = widget.socket.read(2);
